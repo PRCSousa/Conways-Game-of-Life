@@ -5,8 +5,10 @@ import time
 pygame.init()
 
 class gamestate:
-    sq = 50
-    board = []
+    window = 800
+    sq = 100
+    sqsize = window / sq
+    thisgen = []
     newgen = []
 
 class color:
@@ -15,28 +17,28 @@ class color:
 
 def fillboard():
     for y in range(gamestate.sq):
-            gamestate.board.append([])
+            gamestate.thisgen.append([])
             for x in range(gamestate.sq):
-                gamestate.board[y].append(0)
+                gamestate.thisgen[y].append(0)
 
 def drawboard(screen):
 
     for y in range(gamestate.sq):
         for x in range(gamestate.sq):
             pygame.draw.rect(screen, color.black, pygame.Rect(
-                x * gamestate.sq, y * gamestate.sq, gamestate.sq - 1, gamestate.sq - 2))
-            if gamestate.board[y][x] == 1:
+                x * gamestate.sqsize, y * gamestate.sqsize, gamestate.sqsize - 1, gamestate.sqsize - 2))
+            if gamestate.thisgen[y][x] == 1:
                 pygame.draw.rect(screen, color.white, pygame.Rect(
-                x * gamestate.sq, y * gamestate.sq, gamestate.sq - 1, gamestate.sq - 2))
+                x * gamestate.sqsize, y * gamestate.sqsize, gamestate.sqsize - 1, gamestate.sqsize - 2))
 
-    pygame.draw.line(screen, color.white, (0,0),(0,800),1)
-    pygame.draw.line(screen, color.white, (0,0),(800,0),1)
+    pygame.draw.line(screen, color.white, (0,0),(0,gamestate.window),1)
+    pygame.draw.line(screen, color.white, (0,0),(gamestate.window,0),1)
 
 def selectcell(y, x,):
-    if gamestate.board[y][x] == 0:
-        gamestate.board[y][x] = 1
+    if gamestate.thisgen[y][x] == 0:
+        gamestate.thisgen[y][x] = 1
     else:
-        gamestate.board[y][x] = 0
+        gamestate.thisgen[y][x] = 0
 
 def switchcell(y, x,):
     if gamestate.newgen[y][x] == 0:
@@ -45,58 +47,58 @@ def switchcell(y, x,):
         gamestate.newgen[y][x] = 0
 
 def nextgen():
-    gamestate.newgen = copy.deepcopy(gamestate.board)
+    gamestate.newgen = copy.deepcopy(gamestate.thisgen)
     for y in range(gamestate.sq):
         for x in range(gamestate.sq):
             sum = count(y, x)
-            if sum >= 4 and gamestate.board[y][x] == 1:
+            if sum >= 4 and gamestate.thisgen[y][x] == 1:
                 switchcell(y, x)
-            if sum == 3 and gamestate.board[y][x] == 0:
+            if sum == 3 and gamestate.thisgen[y][x] == 0:
                 switchcell(y, x,)
-            if sum <= 1 and gamestate.board[y][x] == 1:
+            if sum <= 1 and gamestate.thisgen[y][x] == 1:
                 switchcell(y, x,)
-    gamestate.board = gamestate.newgen
+    gamestate.thisgen = gamestate.newgen
 
 
 def count(y, x):
     sum = 0
     try:
-        if gamestate.board[y-1][x-1] == 1:
+        if gamestate.thisgen[y-1][x-1] == 1:
             sum += 1
     except IndexError:
         pass
     try:
-        if gamestate.board[y-1][x] == 1:
+        if gamestate.thisgen[y-1][x] == 1:
             sum += 1
     except IndexError:
         pass
     try:
-        if gamestate.board[y-1][x+1] == 1:
+        if gamestate.thisgen[y-1][x+1] == 1:
             sum += 1
     except IndexError:
         pass
     try:
-        if gamestate.board[y][x-1] == 1:
+        if gamestate.thisgen[y][x-1] == 1:
             sum += 1
     except IndexError:
         pass
     try:
-        if gamestate.board[y][x+1] == 1:
+        if gamestate.thisgen[y][x+1] == 1:
             sum += 1
     except IndexError:
         pass
     try:
-        if gamestate.board[y+1][x-1] == 1:
+        if gamestate.thisgen[y+1][x-1] == 1:
             sum += 1
     except IndexError:
         pass
     try:
-        if gamestate.board[y+1][x] == 1:
+        if gamestate.thisgen[y+1][x] == 1:
             sum += 1
     except IndexError:
         pass
     try:
-        if gamestate.board[y+1][x+1] == 1:
+        if gamestate.thisgen[y+1][x+1] == 1:
             sum += 1
     except IndexError:
         pass
@@ -104,11 +106,11 @@ def count(y, x):
 
 
 def gameoflife():
-    screen = pygame.display.set_mode((800, 800))
+    screen = pygame.display.set_mode((gamestate.window, gamestate.window))
     clock = pygame.time.Clock()
     screen.fill(color.white)
     fillboard()
-    # print(gamestate.board)
+    # print(gamestate.thisgen)
     drawboard(screen)
     clock.tick(15)
     pygame.display.flip()
@@ -123,8 +125,8 @@ def gameoflife():
 
             if e.type == pygame.MOUSEBUTTONDOWN:
                 click = pygame.mouse.get_pos()
-                y = int(click[1] // gamestate.sq)
-                x = int(click[0] // gamestate.sq)
+                y = int(click[1] // gamestate.sqsize)
+                x = int(click[0] // gamestate.sqsize)
                 # print(yi, xi)
                 selectcell(y,x)
                 
@@ -141,7 +143,7 @@ def gameoflife():
         
         if play == True:
             nextgen()
-            time.sleep(0.5)
+            time.sleep(0.1)
 
         drawboard(screen)
         pygame.display.flip()
