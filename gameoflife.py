@@ -5,6 +5,7 @@ import time
 
 pygame.init()
 
+
 class gamestate:
     window = 800
     sq = unsignedinteger
@@ -12,28 +13,31 @@ class gamestate:
     thisgen = []
     newgen = []
 
+
 class color:
     black = pygame.Color(0, 0, 0)
-    white = pygame.Color(255,255,255)
+    white = pygame.Color(255, 255, 255)
+
 
 def fillboard():
     for y in range(gamestate.sq):
-            gamestate.thisgen.append([])
-            for x in range(gamestate.sq):
-                gamestate.thisgen[y].append(0)
+        gamestate.thisgen.append([])
+        for x in range(gamestate.sq):
+            gamestate.thisgen[y].append(0)
+
 
 def drawboard(screen):
-
     for y in range(gamestate.sq):
         for x in range(gamestate.sq):
             pygame.draw.rect(screen, color.black, pygame.Rect(
                 x * gamestate.sqsize, y * gamestate.sqsize, gamestate.sqsize - 1, gamestate.sqsize - 2))
             if gamestate.thisgen[y][x] == 1:
                 pygame.draw.rect(screen, color.white, pygame.Rect(
-                x * gamestate.sqsize, y * gamestate.sqsize, gamestate.sqsize - 1, gamestate.sqsize - 2))
+                    x * gamestate.sqsize, y * gamestate.sqsize, gamestate.sqsize - 1, gamestate.sqsize - 2))
 
-    pygame.draw.line(screen, color.white, (0,0),(0,gamestate.window),1)
-    pygame.draw.line(screen, color.white, (0,0),(gamestate.window,0),1)
+    pygame.draw.line(screen, color.white, (0, 0), (0, gamestate.window), 1)
+    pygame.draw.line(screen, color.white, (0, 0), (gamestate.window, 0), 1)
+
 
 def selectcell(y, x,):
     if gamestate.thisgen[y][x] == 0:
@@ -41,11 +45,13 @@ def selectcell(y, x,):
     else:
         gamestate.thisgen[y][x] = 0
 
+
 def switchcell(y, x,):
     if gamestate.newgen[y][x] == 0:
         gamestate.newgen[y][x] = 1
     else:
         gamestate.newgen[y][x] = 0
+
 
 def nextgen():
     gamestate.newgen = copy.deepcopy(gamestate.thisgen)
@@ -130,24 +136,25 @@ def gameoflife():
                 click = pygame.mouse.get_pos()
                 y = int(click[1] // gamestate.sqsize)
                 x = int(click[0] // gamestate.sqsize)
-                selectcell(y,x)
-                
+                selectcell(y, x)
+
             if e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_SPACE:
                     nextgen()
-            
+
             if e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_RETURN:
                     if play == True:
                         play = False
                     else:
                         play = True
-        
+
         if play == True:
             nextgen()
             time.sleep(0.1)
 
         drawboard(screen)
         pygame.display.flip()
+
 
 gameoflife()
