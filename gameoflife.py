@@ -1,4 +1,5 @@
 import copy
+from numpy import unsignedinteger
 import pygame
 import time
 
@@ -6,8 +7,8 @@ pygame.init()
 
 class gamestate:
     window = 800
-    sq = 100
-    sqsize = window / sq
+    sq = unsignedinteger
+    sqsize = unsignedinteger
     thisgen = []
     newgen = []
 
@@ -106,11 +107,13 @@ def count(y, x):
 
 
 def gameoflife():
+    print("Grid Size: ")
+    gamestate.sq = int(input())
+    gamestate.sqsize = gamestate.window / gamestate.sq
     screen = pygame.display.set_mode((gamestate.window, gamestate.window))
     clock = pygame.time.Clock()
     screen.fill(color.white)
     fillboard()
-    # print(gamestate.thisgen)
     drawboard(screen)
     clock.tick(15)
     pygame.display.flip()
@@ -127,7 +130,6 @@ def gameoflife():
                 click = pygame.mouse.get_pos()
                 y = int(click[1] // gamestate.sqsize)
                 x = int(click[0] // gamestate.sqsize)
-                # print(yi, xi)
                 selectcell(y,x)
                 
             if e.type == pygame.KEYDOWN:
