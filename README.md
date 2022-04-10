@@ -10,4 +10,4 @@ This is a basic implementation of Conway's Game of Life ruleset, visualized with
 
 ## How to play: ##
 
-    Run the program, in the console you're gonna be asked for the grid size. Click the grid to set the cells you desire and press SPACE to move to the next generation, or ENTER pass generations automatically.
+   Run the program, in the console you're gonna be asked for the grid size. Click the grid to set the cells you desire and press SPACE to move to the next generation, or ENTER pass generations automatically.
